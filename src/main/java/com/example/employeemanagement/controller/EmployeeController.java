@@ -1,13 +1,18 @@
 package com.example.employeemanagement.controller;
 
+import com.example.employeemanagement.exception.EmployeeAlreadyExistsException;
+import com.example.employeemanagement.exception.ErrorResponse;
 import com.example.employeemanagement.model.CreateEmployeeRequest;
 import com.example.employeemanagement.model.EmployeeResponse;
 import com.example.employeemanagement.service.EmployeeService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
@@ -31,5 +36,12 @@ public class EmployeeController {
 //    public List<Employee> getAllEmployees() {
 //        return employeeService.getAllEmployees();
 //    }
+
+    // Exception Handler to handle EmployeeAlreadyExistsException for this controller
+    @ExceptionHandler(value = EmployeeAlreadyExistsException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorResponse handleEmployeeAlreadyExistsException(EmployeeAlreadyExistsException ex) {
+        return new ErrorResponse(ex.getMessage(), HttpStatus.CONFLICT.toString());
+    }
 
 }

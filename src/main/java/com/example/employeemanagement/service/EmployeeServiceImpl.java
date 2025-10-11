@@ -1,6 +1,7 @@
 package com.example.employeemanagement.service;
 
 import com.example.employeemanagement.entity.EmployeeEntity;
+import com.example.employeemanagement.exception.EmployeeAlreadyExistsException;
 import com.example.employeemanagement.mapper.EmployeeDataMapper;
 import com.example.employeemanagement.model.CreateEmployeeRequest;
 import com.example.employeemanagement.model.EmployeeResponse;
@@ -16,7 +17,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @NonNull
     private EmployeeRepository employeeRepository;
-    private EmployeeDataMapper employeeDataMapper = Mappers.getMapper(EmployeeDataMapper.class);
+    private final EmployeeDataMapper employeeDataMapper = Mappers.getMapper(EmployeeDataMapper.class);
 
 
     /**
@@ -27,7 +28,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     public EmployeeResponse createEmployee(CreateEmployeeRequest employeeRequest) {
         String email = employeeRequest.email().trim().toLowerCase();
         if (employeeRepository.existsByEmailID(email)) {
-            throw new IllegalArgumentException("Email ID already exists");
+            throw new EmployeeAlreadyExistsException("Email ID already exists : " + email);
         }
 
         EmployeeEntity employeeEntity = employeeDataMapper.toEmployeeEntity(employeeRequest);

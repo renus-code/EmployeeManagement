@@ -20,7 +20,7 @@ import java.net.URI;
 @RequiredArgsConstructor
 @RestController
 public class EmployeeController {
-    private final String REQ_URL = "/api/v1/emp/";
+    private static final String REQ_URL = "/api/v1/emp/";
 
     @NonNull
     private final EmployeeService employeeService;

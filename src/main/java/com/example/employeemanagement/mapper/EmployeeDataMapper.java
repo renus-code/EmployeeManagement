@@ -26,8 +26,9 @@ public interface EmployeeDataMapper {
 
 
     @Mapping(source = "emailID", target = "email")
-    @Mapping(target = "contact", expression = "java(mapContact(savedEmployee))")
-    EmployeeResponse toResponse(EmployeeEntity savedEmployee);
+    @Mapping(target = "id", expression = "java(employee.getId() != null ? String.valueOf(employee.getId()) : null)")
+    @Mapping(target = "contact", expression = "java(mapContact(employee))")
+    EmployeeResponse toResponse(EmployeeEntity employee);
 
 
     default ContactDTO mapContact(EmployeeEntity entity) {

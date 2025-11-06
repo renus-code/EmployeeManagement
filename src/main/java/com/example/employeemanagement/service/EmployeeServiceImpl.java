@@ -2,6 +2,7 @@ package com.example.employeemanagement.service;
 
 import com.example.employeemanagement.entity.EmployeeEntity;
 import com.example.employeemanagement.exception.EmployeeAlreadyExistsException;
+import com.example.employeemanagement.exception.NotFoundException;
 import com.example.employeemanagement.mapper.EmployeeDataMapper;
 import com.example.employeemanagement.model.CreateEmployeeRequest;
 import com.example.employeemanagement.model.EmployeeResponse;
@@ -10,6 +11,9 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -40,6 +44,19 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employeeDataMapper.toResponse(savedEmployee);
     }
 
+    @Override
+    public List<EmployeeResponse> getAllEmployees() {
+        return employeeRepository.findAll().stream()
+                .map(employeeDataMapper::toResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public EmployeeResponse getEmployeeById(Long id) {
+        EmployeeEntity entity = employeeRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Employee not found with id: " + id));
+        return employeeDataMapper.toResponse(entity);
+    }
 
     /**
      * @return
